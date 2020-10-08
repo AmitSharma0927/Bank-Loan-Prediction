@@ -1,0 +1,79 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Sun Apr  1 22:06:02 2018
+
+@author: admin
+"""
+
+
+import math
+import numpy as np
+import sklearn
+import pandas as pd # File Handling
+from sklearn.linear_model import LogisticRegression
+from sklearn.cross_validation import train_test_split
+import matplotlib.pyplot as plt
+#import plotly.plotly as py
+#import matplotlib.pyplot.boxplot as blt
+from numpy import where
+# Data Read
+df = pd.read_csv('C:/Users/admin/Documents/bank-full12 (1).csv')
+print(df)
+df.columns = ["age","job","marital","education","default","balance","housing","loan","contact","day","month","duration","campaign","pdays","previous","poutcome","y"]
+# Features
+X = np.array(df[['age','job','marital','education','default','balance','housing','loan','contact','day','month','duration','campaign','pdays','previous','poutcome','y'
+]])
+# Class
+Z = np.array(df['y'])
+
+ #visualize data, uncomment "show()" to run it
+pos = where(Z == 1)
+neg = where(Z == 2)
+plt.scatter(X[pos, 0], X[pos, 1], marker='s', c='red')
+plt.scatter(X[neg, 0], X[neg, 1], marker='^', c='darkblue')
+plt.title('Term Deposit',size=18)
+plt.xlabel('Features',size=13)
+plt.ylabel('Features',size=13)
+plt.legend(['Will take T.D', 'WILL not'])
+plt.show()
+
+# formats the input data into two arrays, one of independant variables
+# and one of the dependant variable
+features = df[["age","job","marital","education","default","balance","housing","loan"]]
+features = np.array(features)
+labels = df["y"]
+labels = np.array(labels)
+
+# Normalize grades to values between 0 and 1 for more efficient computation
+normalized_range = sklearn.preprocessing.MinMaxScaler(feature_range=(-1,1))
+
+# Extract Features + Labels
+# labels.shape =  (100,) #scikit expects this
+features = normalized_range.fit_transform(features)
+
+# Create Test/Train
+features_train,features_test,labels_train,labels_test = train_test_split(features,labels)
+
+# Scikit Logistic Regression
+clf = LogisticRegression()
+x=clf.fit(features_train,labels_train)
+#Score is Mean Accuracy
+scikit_score = clf.score(features_test,labels_test)
+predict=clf.predict(np.array([[12,1,3,0,2,0,2,1],[1,1,0,0,2,0,0,0],[41,2,3,1,2,270,2,2]]))
+print ("Predictd  Result = ", predict)
+print("\t")
+
+'''if(predict==1):
+    print("People will take term deposit")
+else :
+    print("They will not take.")'''
+
+print ('1 = Yes he will take T.D ')
+print ('2 = No he will not take T.D')
+print ('Scikit score: ', scikit_score*100)
+print("\t")
+print("CREATED BY AMIT & SHIVAM ")
+print("\t")
+print("THANK YOU")
+
+
